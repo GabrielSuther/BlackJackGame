@@ -103,42 +103,42 @@ def action(hands, bets, balance, deck, amount = 0):
             deck.pop([i][0])
     print("The dealer hand:",dealerHand)
     for hand in hands:
-        
         print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
+        
 
 def sumHands(hands, hand, dealer, amount = 0):
     for x in hands[hand]:
-        if "1" in x:
+        if "13" in x:
+            amount += 10 
+        elif "12" in x:
+            amount += 10
+        elif "11" in x:
+            amount += 10
+        elif "10" in x:
+            amount += 10
+        elif "9" in x:
+            amount += 9
+        elif "8" in x:
+            amount += 8
+        elif "7" in x:
+            amount += 7
+        elif "6" in x:
+            amount += 6
+        elif "5" in x:
+            amount += 5
+        elif "4" in x:
+            amount += 4
+        elif "3" in x:
+            amount += 3
+        elif "2" in x:
+            amount += 2
+        elif "1" in x:
             if amount > 21:
                 amount += 1
             else:
-                amount += 11
-        if "2" in x:
-            amount += 2
-        if "3" in x:
-            amount += 3
-        if "4" in x:
-            amount += 4
-        if "5" in x:
-            amount += 5
-        if "6" in x:
-            amount += 6
-        if "7" in x:
-            amount += 7
-        if "8" in x:
-            amount += 8
-        if "9" in x:
-            amount += 9
-        if "10" in x:
-            amount += 10
-        if "11" in x:
-            amount += 10
-        if "12" in x:
-            amount += 10
-        if "13" in x:
-            amount += 10       
-    print(hands[hand])
-    print(amount)
+                amount += 11      
+    #print(hands[hand])
+    #print(amount)
     return amount
             
     
