@@ -93,7 +93,7 @@ def deal(bets, balance, deck):
     action(hands, bets, balance, deck)
     
 #R
-def action(hands, bets, balance, deck, amount = 0):
+def action(hands, bets, balance, deck):
     #Dealers hand
     dealerHand = []
     if dealerHand == []:
@@ -102,13 +102,14 @@ def action(hands, bets, balance, deck, amount = 0):
             dealerHand.append(str(dealerCard))
             deck.pop([i][0])
     print("The dealer hand:",dealerHand)
+    amount = 0
     for hand in hands:
         print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
-        #print(type(amount))
-        amount = 0
-        print(amount)
-        while amount :
-            option = input("What do you want to do [1] Hit [2] Stay [3] Double [4] Split")
+        #print(type(amount))   
+        print(hand)   
+        #print(amount)
+        while amount <= 21:
+            option = input("What do you want to do [1] Hit [2] Stay [3] Double [4] Split: ")
             if option == "1":
                 print("Hit!")
                 card= deck[i][0], "of", deck[i][1]
@@ -118,10 +119,11 @@ def action(hands, bets, balance, deck, amount = 0):
                 print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
             elif option == '2':
                 print("Stay!")
-                continue 
+                break
+                
                 
 
-def sumHands(hands, hand, dealer, amount = 0):
+def sumHands(hands, hand, dealer, amount):
     for x in hands[hand]:
         if "13" in x:
             amount += 10 
@@ -148,17 +150,17 @@ def sumHands(hands, hand, dealer, amount = 0):
         elif "2" in x:
             amount += 2
         elif "1" in x:
+            amount += 11
             if amount > 21:
-                amount += 1
-            else:
-                amount += 11  
-    print(amount)
+                amount -= 10
+              
+   
     if amount > 21:
         print("BUST!")
     elif amount == 21:
         print("BJ!")
             
-    #print(hands[hand])
+    #1print(hand)
     #print(amount)
     return amount
             
@@ -167,4 +169,4 @@ def sumHands(hands, hand, dealer, amount = 0):
 deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
 # shuffle the cards
 random.shuffle(deck) 
-deal([5], 200, deck)
+deal([5, 3, 2, 1, 7, 1], 200, deck)
