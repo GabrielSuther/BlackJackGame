@@ -104,7 +104,7 @@ def action(hands, bets, balance, deck):
     print("The dealer hand:",dealerHand)
     amount = 0
     for hand in hands:
-        print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
+        print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand))
         #print(type(amount))   
         print(hand)   
         #print(amount)
@@ -120,10 +120,11 @@ def action(hands, bets, balance, deck):
             elif option == '2':
                 print("Stay!")
                 break
-                
+        else:
+            continue
                 
 
-def sumHands(hands, hand, dealer, amount):
+def sumHands(hands, hand, dealer, amount = 0):
     for x in hands[hand]:
         if "13" in x:
             amount += 10 
