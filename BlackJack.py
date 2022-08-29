@@ -104,9 +104,10 @@ def action(hands, bets, balance, deck):
     print("The dealer hand:",dealerHand)
     
     for hand in hands:
+        doublecount = 0
         amount = 0
         print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
-        print(hand)   
+        print("Amount bet $"+str(bets[hand])) 
         #Runs hand and should go to next hand if player busts 
         while amount < 21:
             option = input("What do you want to do [1] Hit [2] Stay [3] Double [4] Split: ")
@@ -121,6 +122,23 @@ def action(hands, bets, balance, deck):
             elif option == '2':
                 print("Stay!")
                 break
+            elif option == '3':
+                if doublecount == 0:
+                    if balance > bets[hand] * 2:
+                        balance -= bets[hand] * 2
+                        print("Updated Balance $"+str(balance))
+                        bets[hand] *= 2
+                        doublecount += 1
+                        card= deck[i][0], "of", deck[i][1]
+                        #Adds card to respective hand dictionary and removes it from deck
+                        hands[hand].append(str(card))
+                        deck.pop([i][0])
+                        print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount),"\n")
+                        break
+                    elif balance < bets[hand] * 2:
+                        print("Not enough funds to double bet")
+                
+                    
   
                 
 
@@ -157,9 +175,9 @@ def sumHands(hands, hand, dealer, amount):
               
    
     if amount > 21:
-        print("BUST!")
+        print("========================================!BUST!========================================")
     elif amount == 21:
-        print("BJ!")
+        print("========================================!!!BJ!!!========================================")
             
     #1print(hand)
     #print(amount)
@@ -177,4 +195,4 @@ def checkAmount(amount):
 deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
 # shuffle the cards
 random.shuffle(deck) 
-deal([5, 3, 2, 1, 7, 1], 200, deck)
+deal([101, 3, 2, 1, 7, 1], 200, deck)
