@@ -102,13 +102,13 @@ def action(hands, bets, balance, deck):
             dealerHand.append(str(dealerCard))
             deck.pop([i][0])
     print("The dealer hand:",dealerHand)
-    amount = 0
+    
     for hand in hands:
-        print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand))
-        #print(type(amount))   
+        amount = 0
+        print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
         print(hand)   
-        #print(amount)
-        while amount <= 21:
+        #Runs hand and should go to next hand if player busts 
+        while amount < 21:
             option = input("What do you want to do [1] Hit [2] Stay [3] Double [4] Split: ")
             if option == "1":
                 print("Hit!")
@@ -117,14 +117,14 @@ def action(hands, bets, balance, deck):
                 hands[hand].append(str(card))
                 deck.pop([i][0])
                 print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
+                amount = sumHands(hands, hand, dealerHand, amount)
             elif option == '2':
                 print("Stay!")
                 break
-        else:
-            continue
+  
                 
 
-def sumHands(hands, hand, dealer, amount = 0):
+def sumHands(hands, hand, dealer, amount):
     for x in hands[hand]:
         if "13" in x:
             amount += 10 
@@ -165,6 +165,13 @@ def sumHands(hands, hand, dealer, amount = 0):
     #print(amount)
     return amount
             
+def checkAmount(amount):
+    if amount > 21:
+        return "BUST"
+    elif amount < 21:
+        "SAFE"
+    else:
+        "BJ"
     
        
 deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
