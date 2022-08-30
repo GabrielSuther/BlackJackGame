@@ -115,6 +115,7 @@ def action(hands, bets, balance, deck):
         print("Amount bet $"+str(bets[hand])) 
         #Runs hand and should go to next hand if player busts 
         while amount < 21:
+            print("START", amount)
             option = input("What do you want to do [1] Hit [2] Stay [3] Double [4] Split: ")
             #Adds one card to hand while taking on out of deck and returning new amount of hand
             if option == "1":
@@ -166,8 +167,9 @@ def action(hands, bets, balance, deck):
                     print("You already split this hand")
                 split = 1
 
-            
+#Adds cards in a hand together
 def sumHands(hands, hand, dealer, amount):
+    print("BEFORE",amount)
     for x in hands[hand]:
         if "13" in x:
             amount += 10 
@@ -193,19 +195,29 @@ def sumHands(hands, hand, dealer, amount):
             amount += 3
         elif "2" in x:
             amount += 2
-        elif "1" in x:
+        elif "(1," in x:
             amount += 11
-            if amount > 21:
-                amount -= 10
-              
-   
+            #if amount > 21:
+                #amount -= 10
+    cards = hands[hand]       
+    
+    
     if amount > 21:
-        print("========================================!BUST!========================================")
+        
+        print("TESTTY",amount)
+        for x in cards:
+            print(x)
+            if "(1," in x:
+                print("HFJHFDKJLSFHSDKJHKDFS")
+                amount -= 10
+                print("MIDDLE",amount)
+        if amount > 21:
+            print("========================================!BUST!========================================")
     elif amount == 21:
         print("========================================!!!BJ!!!========================================")
             
     #1print(hand)
-    #print(amount)
+    print("END",amount)
     return amount
             
 
