@@ -78,7 +78,7 @@ def deal(bets, balance, deck):
             #Adds card to respective hand dictionary and removes it from deck
             hand.append(str(card))
             deck.pop([i][0])
-            #If only getting dealt one card hands change hand[2:5] to either hand[3:5] or hand[2:5] across all hand variables in if/elif statments 
+            #If problem with only getting dealt one card hands change hand[2:5] to either hand[3:5] or hand[2:5] across all hand variables in if/elif statments 
             if index == 0:
                 hands[index] = hand[0:2]
             elif index == 1:
@@ -99,6 +99,7 @@ def action(hands, bets, balance, deck):
     splitCount = 0
     amountList = []
     splitHands = {}
+    tempsplitHands = {}
     #Dealers hand
     dealerHand = []
     if dealerHand == []:
@@ -106,7 +107,7 @@ def action(hands, bets, balance, deck):
             dealerCard = deck[i][0], "of", deck[i][1]
             dealerHand.append(str(dealerCard))
             deck.pop([i][0])
-            #print("The dealer hand:",dealerHand)
+        print("The dealer hand:",dealerHand)
     for hand in hands:
         split = 0
         doublecount = 0
@@ -122,6 +123,8 @@ def action(hands, bets, balance, deck):
                 print("\nHit!\n")
                 card= deck[i][0], "of", deck[i][1]
                 #Adds card to respective hand dictionary and removes it from deck
+                print(type(hands))
+                print(type(hands[hand]))
                 hands[hand].append(str(card))
                 deck.pop([i][0])
                 print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount),"\n")
@@ -149,25 +152,75 @@ def action(hands, bets, balance, deck):
                 elif balance < bets[hand] * 2:
                     print("Not enough funds to double bet")
             elif option == '4':
-                if split == 0:
-                    if balance > bets[hand]:
-                        x = []
-                        y = []
-                        x, y = hands[hand]
-                        splitHands[splitCount] = x
-                #print(hands[hand])
-                        hands[hand].remove(x)
-                #print(hands[hand])
-                #print(splitHands)
-                        print(bets)
-                        bets.append(bets[hand])
-                        print(bets)
-                    elif balance < bets[hand]:
-                        print("Not enough funds to split hand")
+                print("\nSplit!\n")
+                x = []
+                y = []
+                z, y = hands[hand]
+                x.append(z)
+                tempsplitHands[splitCount] = x
+                if y[0:4] == z[0:4]:
+                    splitHands[splitCount] = x
+                    card= deck[i][0], "of", deck[i][1]
+                     #Adds card to respective hand dictionary and removes it from deck
+                    splitHands[splitCount].append(str(card))
+                    deck.pop([i][0])
+                    if split == 0:
+                        if balance >= bets[hand]:
+                            hands[hand].remove(z)
+                            #print(hands[hand])
+                            #print(splitHands[0])
+                            bets.append(bets[hand])
+                            split = 1
+                            splitCount += 1
+                        elif balance < bets[hand]:
+                            print("Not enough funds to split hand")
+                    else:
+                        print("You already split this hand")
                 else:
-                    print("You already split this hand")
-                split = 1
-
+                    print("Cannot split two different valued cards")
+    for h in splitHands:
+        doublecount = 0
+        amount = 0
+        print("==========dfsafdsfdf",type(splitHands[h]))
+        print("===================================",type(h),"=========================")
+        print("Your hand(s):", splitHands[h],"Total:", sumHands(splitHands, h, dealerHand, amount))
+        print("Amount bet $"+str(bets[hand+h+1])) 
+        #Runs hand and should go to next hand if player busts 
+        while amount < 21:
+            amount = 0
+            option = input("What do you want to do [1] Hit [2] Stay [3] Double [4] Split: ")
+            #Adds one card to hand while taking on out of deck and returning new amount of hand
+            if option == "1":
+                print("\nHit!\n")
+                card= deck[i][0], "of", deck[i][1]
+                #Adds card to respective hand dictionary and removes it from deck
+                splitHands[h].append(str(card))
+                deck.pop([i][0])
+                print("Your hand(s):", splitHands[h],"Total:", sumHands(splitHands, h, dealerHand, amount),"\n")
+                amount = sumHands(splitHands, h, dealerHand, amount)
+            #Breaks and goes to next hand of player Hands
+            elif option == '2':
+                print("\nStay!\n")
+                amountList.append(sumHands(splitHands, h, dealerHand, amount))
+                break
+            #Doubles bet as long as player has enough money, gives/removes one card, continues game to next player hand
+            elif option == '3':
+                print("\nDouble!\n")
+                if balance > bets[hand+h+1] * 2:
+                    balance -= bets[hand+h+1] * 2
+                    print("Updated Balance $"+str(balance))
+                    bets[hand+h+1] *= 2
+                    print("New bet amount $", bets[hand+h+1])
+                    card= deck[i][0], "of", deck[i][1]
+                     #Adds card to respective hand dictionary and removes it from deck
+                    splitHands[h].append(str(card))
+                    deck.pop([i][0])
+                    print("Your hand(s):", splitHands[h],"Total:", sumHands(splitHands, h, dealerHand, amount))
+                    amountList.append(sumHands(splitHands, h, dealerHand, amount))
+                    break
+                elif balance < bets[hand+h+1] * 2:
+                    print("Not enough funds to double bet")   
+                     
 #Adds cards in a hand together
 def sumHands(hands, hand, dealer, amount):
     for x in hands[hand]:
@@ -203,13 +256,11 @@ def sumHands(hands, hand, dealer, amount):
     if amount > 21:
         for x in cards:
             if "(1," in x:
-                print("HFJHFDKJLSFHSDKJHKDFS")
                 amount -= 10
     if amount > 21:
         print("========================================!BUST!========================================")
     elif amount == 21:
-        print("========================================!!!BJ!!!========================================")
-            
+        print("========================================!!!BJ!!!========================================")     
     return amount
             
 
@@ -218,5 +269,5 @@ def sumHands(hands, hand, dealer, amount):
 deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
 # shuffle the cards
 random.shuffle(deck) 
-deal([101, 3, 2, 1, 7, 1], 100, deck)
+deal([10, 3, 2, 1, 7, 1], 100, deck)
 #welcome()
