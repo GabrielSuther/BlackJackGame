@@ -39,11 +39,12 @@ def gameSetup(balance):
     else:
         gameSetup(balance)
     print("You now have a balance of $",balance)
+    howManyHands(balance)
     
 #Asks player how many hands they want to play with and has a max of 6
 def howManyHands(balance):
     num_hands = input("How many hands would you like to be dealt max 6: ")
-    if num_hands > 6:
+    if int(num_hands) > 6:
         print("Too many hands please choose 6 or less")
         howManyHands(balance)
     bets(balance, num_hands)
@@ -60,7 +61,7 @@ def bets(balance, hands):
         print("Not enough money to place bets. Try again")
         bets(balance, hands)
     balance -= total
-    print(balance)
+    print("You're balance after placing bets is:",balance)
     deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
 # shuffle the cards
     random.shuffle(deck)
@@ -107,6 +108,7 @@ def action(hands, bets, balance, deck):
             deck.pop([i][0])
             print("The dealer hand:",dealerHand)
     for hand in hands:
+        split = 0
         doublecount = 0
         amount = 0
         print("Your hand(s):", hands[hand],"Total:", sumHands(hands, hand, dealerHand, amount))
@@ -128,7 +130,7 @@ def action(hands, bets, balance, deck):
                 print("Stay!")
                 amountList.append(sumHands(hands, hand, dealerHand, amount))
                 break
-            #Doubles bet, gives/removes one card, continues game to next player hand
+            #Doubles bet as long as player has enough money, gives/removes one card, continues game to next player hand
             elif option == '3':
                 if balance > bets[hand] * 2:
                     balance -= bets[hand] * 2
@@ -145,14 +147,24 @@ def action(hands, bets, balance, deck):
                 elif balance < bets[hand] * 2:
                     print("Not enough funds to double bet")
             elif option == '4':
-                x = []
-                y = []
-                x, y = hands[hand]
-                splitHands[splitCount] = x
-                print(hands[hand])
-                hands[hand].remove(x)
-                print(hands[hand])
-                print(splitHands)
+                if split == 0:
+                    if balance > bets[hand]:
+                        x = []
+                        y = []
+                        x, y = hands[hand]
+                        splitHands[splitCount] = x
+                #print(hands[hand])
+                        hands[hand].remove(x)
+                #print(hands[hand])
+                #print(splitHands)
+                        print(bets)
+                        bets.append(bets[hand])
+                        print(bets)
+                    elif balance < bets[hand]:
+                        print("Not enough funds to split hand")
+                else:
+                    print("You already split this hand")
+                split = 1
 
             
 def sumHands(hands, hand, dealer, amount):
@@ -202,4 +214,5 @@ def sumHands(hands, hand, dealer, amount):
 deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
 # shuffle the cards
 random.shuffle(deck) 
-deal([101, 3, 2, 1, 7, 1], 200, deck)
+deal([101, 3, 2, 1, 7, 1], 100, deck)
+#welcome()
