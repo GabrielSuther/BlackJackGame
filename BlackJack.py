@@ -25,6 +25,7 @@ def rules():
            
 #Asks the player if they would like to Deposit/Withdraw money and How many hands they would like to be dealt when the game starts 
 def gameSetup(balance):
+    print("Your Balance $"+ str(balance))
     ans = input("Would you like to [1] Depost or [2] Withdraw money: ")
     if ans == '1':
         deposit = input("How much money do you want to deposit: ")
@@ -61,7 +62,7 @@ def bets(balance, hands):
         print("Not enough money to place bets. Try again")
         bets(balance, hands)
     balance -= total
-    print("You're balance after placing bets is:",balance)
+    print("You're balance after placing bets is $" + str(balance))
     deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
 # shuffle the cards
     random.shuffle(deck)
@@ -218,25 +219,30 @@ def action(hands, bets, balance, deck):
                 elif balance < bets[hand+h+1] * 2:
                     print("Not enough funds to double bet") 
     #while dealerHand  
-    dealerAmount = sumHandsDealer(dealerHand, hand, amount)
-    print("Dealer Hand:",dealerHand, "Total:",sumHandsDealer(dealerHand, hand, amount))
+    dealerAmount = sumHandsDealer(dealerHand, amount)
+    print("Dealer Hand:",dealerHand, "Total:",sumHandsDealer(dealerHand, amount))
     while dealerAmount < 17:
         dealerCard = deck[i][0], "of", deck[i][1]
         dealerHand.append(str(dealerCard))
         deck.pop([i][0])
-        dealerAmount = sumHandsDealer(dealerHand, hand, amount)
-        print("Dealer Hand:",dealerHand, "Total:",sumHandsDealer(dealerHand, hand, amount))
+        dealerAmount = sumHandsDealer(dealerHand, amount)
+        print("Dealer Hand:",dealerHand, "Total:",sumHandsDealer(dealerHand, amount))
     for num in amountList:
         if num > dealerAmount or dealerAmount > 21:
             bet = amountList.index(num)
             balance += bets[bet]
-            print("You won with", num, "against", dealerAmount , ". Money Won $"+ str(bets[bet]), "New Balance:", balance)
+            print("You won with", num, "against", dealerAmount , ". Money Won $"+ str(bets[bet]), "New Balance $" + str(balance))
         elif num == dealerAmount:
-            print("TIE NO MONEY LOST OR WON")
+            print("TIE with", num, "NO MONEY LOST OR WON")
         else:
             bet = amountList.index(num)
             balance -= bets[bet]
-            print("You lost with", num, "against", dealerAmount , "Money Lost $"+ str(bets[bet]), "New Balance:", balance)        
+            print("You lost with", num, "against", dealerAmount , "Money Lost $"+ str(bets[bet]), "New Balance $" + str(balance))  
+    play = input("Would you like to play again [1] Yes [2] No: ")
+    if play == "1":
+        gameSetup(balance)
+    elif play == "2":
+        print("Game Over Final Balance $" + str(balance))   
 #Adds cards in a hand together
 def sumHands(hands, hand, amount):
     for x in hands[hand]:
@@ -279,7 +285,7 @@ def sumHands(hands, hand, amount):
         print("========================================!!!BJ!!!========================================")     
     return amount
             
-def sumHandsDealer(dealer, hand, amount):
+def sumHandsDealer(dealer, amount):
     for x in dealer:
         if "13" in x:
             amount += 10 
@@ -315,8 +321,5 @@ def sumHandsDealer(dealer, hand, amount):
     return amount
     
        
-deck = list(itertools.product(range(1,14),['Spade','Heart','Diamond','Club']))
-# shuffle the cards
-random.shuffle(deck) 
-deal([10, 3, 2, 1, 7, 1], 100, deck)
-#welcome()
+
+welcome()
